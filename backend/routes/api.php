@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\StudentController;
+use App\Http\Controllers\Api\AttendanceController;
 
 /*
 |--------------------------------------------------------------------------
@@ -27,4 +28,8 @@ Route::prefix('auth')->group(function () {
 Route::middleware('auth:sanctum')->group(function () {
 	Route::apiResource('students', StudentController::class);
 
+    Route::get('attendance', [AttendanceController::class, 'index']);
+	Route::post('attendance/bulk', [AttendanceController::class, 'bulkStore']);
+	Route::get('attendance/reports/monthly', [AttendanceController::class, 'monthlyReport']);
+	Route::get('attendance/stats/today', [AttendanceController::class, 'todayStats']);
 });
