@@ -21,6 +21,7 @@ class StudentResource extends JsonResource
             'class' => $this->class,
             'section' => $this->section,
             'photo_path' => $this->photo_path,
+            'photo_url' => $this->photo_path ? asset('storage/' . ltrim($this->photo_path, '/')) : null,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
         ];

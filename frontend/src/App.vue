@@ -32,7 +32,7 @@ const logout = async () => {
   <div v-if="showShell" class="app-shell">
     <aside class="sidebar">
       <div class="brand">
-        <span class="brand__pill">AI</span>
+        <span class="brand__pill">SMS</span>
         <div>
           <p class="brand__title">Mini Attendance</p>
           <p class="brand__subtitle">Vue · Laravel</p>
@@ -54,7 +54,7 @@ const logout = async () => {
         <span class="theme-toggle__icon">{{ uiStore.theme === 'light' ? '🌙' : '☀️' }}</span>
         <span>{{ uiStore.theme === 'light' ? 'Dark mode' : 'Light mode' }}</span>
       </button>
-      <footer class="sidebar__footer">AI-assisted workflow demo</footer>
+      <footer class="sidebar__footer">Vue · Laravel · 2025</footer>
     </aside>
 
     <section class="content">

@@ -25,12 +25,12 @@ export function fetchStudents(params = {}) {
   return api.get('/students', { params }).then((res) => res.data)
 }
 
-export function createStudent(payload) {
-  return api.post('/students', payload).then((res) => res.data)
+export function createStudent(payload, config = {}) {
+  return api.post('/students', payload, config).then((res) => res.data)
 }
 
-export function updateStudent(id, payload) {
-  return api.put(`/students/${id}`, payload).then((res) => res.data)
+export function updateStudent(id, payload, config = {}) {
+  return api.put(`/students/${id}`, payload, config).then((res) => res.data)
 }
 
 export function deleteStudent(id) {

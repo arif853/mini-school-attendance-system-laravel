@@ -7,8 +7,11 @@ use App\Http\Requests\StoreStudentRequest;
 use App\Http\Requests\UpdateStudentRequest;
 use App\Http\Resources\StudentResource;
 use App\Models\Student;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 
 class StudentController extends Controller
 {
@@ -34,11 +37,22 @@ class StudentController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(StoreStudentRequest $request): StudentResource
+    public function store(StoreStudentRequest $request): JsonResponse
     {
-        $student = Student::create($request->validated());
+        $data = $request->validated();
+        $photo = $request->file('photo');
 
-        return StudentResource::make($student);
+        unset($data['photo']);
+
+        if ($photo) {
+            $data['photo_path'] = $this->storePhoto($photo);
+        }
+
+        $student = Student::create($data);
+
+        return StudentResource::make($student)
+            ->response()
+            ->setStatusCode(Response::HTTP_CREATED);
     }
 
     /**
@@ -54,7 +68,16 @@ class StudentController extends Controller
      */
     public function update(UpdateStudentRequest $request, Student $student): StudentResource
     {
-        $student->update($request->validated());
+        $data = $request->validated();
+        $photo = $request->file('photo');
+
+        unset($data['photo']);
+
+        if ($photo) {
+            $data['photo_path'] = $this->storePhoto($photo, $student->photo_path);
+        }
+
+        $student->update($data);
 
         return StudentResource::make($student);
     }
@@ -64,8 +87,21 @@ class StudentController extends Controller
      */
     public function destroy(Student $student): Response
     {
+        if ($student->photo_path) {
+            Storage::disk('public')->delete($student->photo_path);
+        }
+
         $student->delete();
 
         return response()->noContent();
+    }
+
+    private function storePhoto(UploadedFile $file, ?string $existingPath = null): string
+    {
+        if ($existingPath) {
+            Storage::disk('public')->delete($existingPath);
+        }
+
+        return $file->store('students', 'public');
     }
 }

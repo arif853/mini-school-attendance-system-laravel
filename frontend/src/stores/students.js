@@ -1,5 +1,19 @@
 import { defineStore } from 'pinia'
-import { fetchStudents } from '../services/api'
+import {
+  fetchStudents,
+  createStudent as createStudentRequest,
+  updateStudent as updateStudentRequest,
+  deleteStudent as deleteStudentRequest,
+} from '../services/api'
+
+function toFormData(payload) {
+  const formData = new FormData()
+  Object.entries(payload).forEach(([key, value]) => {
+    if (value === undefined || value === null) return
+    formData.append(key, value)
+  })
+  return formData
+}
 
 export const useStudentsStore = defineStore('students', {
   state: () => ({
@@ -50,6 +64,21 @@ export const useStudentsStore = defineStore('students', {
       } finally {
         this.loading = false
       }
+    },
+    async createStudent(payload) {
+      const response = await createStudentRequest(toFormData(payload), {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      return response.data
+    },
+    async updateStudent(id, payload) {
+      const response = await updateStudentRequest(id, toFormData(payload), {
+        headers: { 'Content-Type': 'multipart/form-data' },
+      })
+      return response.data
+    },
+    async deleteStudent(id) {
+      await deleteStudentRequest(id)
     },
   },
 })

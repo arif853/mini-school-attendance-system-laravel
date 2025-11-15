@@ -29,6 +29,7 @@ class UpdateStudentRequest extends FormRequest
             'class' => ['sometimes', 'string', 'max:50'],
             'section' => ['sometimes', 'string', 'max:50'],
             'photo_path' => ['nullable', 'string', 'max:2048'],
+            'photo' => ['nullable', 'image', 'max:2048'],
         ];
     }
 }
